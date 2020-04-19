@@ -7,28 +7,27 @@
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
   <link rel="manifest" href="manifest.json" />
   <title>CarCode Push Notifications LAB</title>
+  <link rel="stylesheet" href="./style.css">
 </head>
 <body>
-  CarCode Push Notifications Lab
-
+  <h1
+    class="title"
+  >CarCode Push Notifications Lab</h1>
   <button
     disabled
     id="install-btn"
+    class="install-btn"
   >
     Install CarCode!
   </button>
-
-  <p class="js-pwa-details"></p>
-
+  <p class="description js-pwa-details"></p>
   <button
     disabled
     id="push-btn"
   >
     Enable Push Messaging
   </button>
-
-  <p class="js-subscription-json"></p>
-  <p class="js-subscription-details"></p>
+  <code class="description js-subscription-json"></code>
   <script src="/service-worker-push.js"></script>
   <script src="/service-worker-registration.js"></script>
   <script src="/service-worker-custom-install.js"></script>
