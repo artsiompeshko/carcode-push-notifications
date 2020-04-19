@@ -22,15 +22,20 @@ function initializeUI() {
     }
   });
 
+  updateSubscribe();
+}
+
+function updateSubscribe() {
   // Set the initial subscription value
-  window.swRegistration.pushManager.getSubscription()
+  window.swRegistration.pushManager
+    .getSubscription()
     .then(function (subscription) {
       isSubscribed = !(subscription === null);
 
       if (isSubscribed) {
-        console.log('User IS subscribed.');
+        console.log("User IS subscribed.");
       } else {
-        console.log('User is NOT subscribed.');
+        console.log("User is NOT subscribed.");
       }
 
       updateBtn();
@@ -92,9 +97,15 @@ function subscribeUser() {
 
 function unsubscribeUser() {
   window.swRegistration.pushManager.getSubscription()
+    .then(function (subscription) {
+      subscription
+        .unsubscribe();
+
+      return subscription;
+    })
     .then(removeSubscriptionFromServer)
-    .then(function () {
-      updateBtn();
+    .finally(function () {
+      updateSubscribe();
     });
 };
 
