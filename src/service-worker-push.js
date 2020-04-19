@@ -2,11 +2,21 @@ const PUBLIC_KEY = 'BPhmk1dRsQFc0m2laCDsoD6MWdkiziFP5OFtF-Pxb2H9r7waH4vQrTySpdio
 
 const pushButton = document.getElementById('push-btn');
 
+const isLocalhost = Boolean(
+  window.location.hostname === "localhost" ||
+    // [::1] is the IPv6 localhost address.
+    window.location.hostname === "[::1]" ||
+    // 127.0.0.0/8 are considered localhost for IPv4.
+    window.location.hostname.match(
+      /^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/
+    )
+);
+
 function initializeUI() {
   pushButton.addEventListener('click', function () {
     pushButton.disabled = true;
     if (isSubscribed) {
-      // TODO: Unsubscribe user
+      unsubscribeUser();
     } else {
       subscribeUser();
     }
@@ -80,8 +90,52 @@ function subscribeUser() {
     });
 }
 
+function unsubscribeUser() {
+  window.swRegistration.pushManager.getSubscription()
+    .then(removeSubscriptionFromServer)
+    .then(function () {
+      updateBtn();
+    });
+};
+
+function removeSubscriptionFromServer(subscription) {
+  const endpoint = subscription.endpoint;
+
+  const url = isLocalhost ? 'http://localhost:8081/unsubscribe' : '/api/unsubscribe';
+
+  return fetch(url, {
+    method: "POST",
+    body: JSON.stringify({
+      endpoint,
+    }),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+}
+
+function sendSubscriptionToServer(subscription) {
+  const p256dh =subscription.keys.p256dh;
+  const auth =subscription.keys.auth;
+  const endpoint = subscription.endpoint;
+
+  const url = isLocalhost ? 'http://localhost:8081/subscribe' : '/api/subscribe';
+
+  fetch(url, {
+    method: "POST",
+    body: JSON.stringify({
+      p256dh,
+      auth,
+      endpoint,
+    }),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+}
+
 function updateSubscriptionOnServer(subscription) {
-  // TODO: Send subscription to application server
+  sendSubscriptionToServer(JSON.parse(JSON.stringify(subscription)));
 
   const subscriptionJson = document.querySelector('.js-subscription-json');
   const subscriptionDetails =

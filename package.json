@@ -4,11 +4,12 @@
   "description": "",
   "main": "workbox-config.js",
   "dependencies": {
-    "workbox-cli": "^5.1.2",
     "atob": "^2.0.3",
     "body-parser": "^1.15.2",
+    "cors": "^2.8.5",
     "express": "^4.14.0",
-    "web-push": "^3.2.1"
+    "web-push": "^3.2.1",
+    "workbox-cli": "^5.1.2"
   },
   "devDependencies": {},
   "scripts": {

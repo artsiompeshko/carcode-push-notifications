@@ -1,10 +1,17 @@
 let express = require("express");
 let webPush = require("web-push");
-let atob = require('atob');
 let bodyParser = require('body-parser');
 let util = require('util');
+let cors = require('cors');
 
 let app = express();
+
+app.use(
+  cors({
+    origin: '*',
+    optionsSuccessStatus: 200,
+  })
+);
 
 let subscribers = [];
 
@@ -44,17 +51,6 @@ app.post('/notify', function (req, res) {
   let senderUserId = req.body.senderUserId;
   let token = req.body.token;
 
-  let subscription = {
-    endpoint:
-      "https://fcm.googleapis.com/fcm/send/cJkdlTBjW14:APA91bGIsUQtdaZBBAt_SM8ZdVg6Vohnuk9lRs_98U0dDajSFMnzwTAmsHDIFtnPkmD1kR41QZFbdRwPR9YaIwc6joXieBqQpHxzz1nZP9-RYpaWo7D0qFhfolGEo2jlSxsyJESrqUHv",
-    expirationTime: null,
-    keys: {
-      p256dh:
-        "BCLxYzXcsROoHbYZdVlHM1VUe3rIZcR89TI9UofDDDNwqLcYyTxBg8C1gaepsE-pcGWT1igiBWfkSfDQMVSPc4U",
-      auth: "jRehFokXT_9URATFtXeqPw",
-    },
-  };
-
   let payload = JSON.stringify({
     message,
     inquiryId,
@@ -65,32 +61,38 @@ app.post('/notify', function (req, res) {
 
   console.log('payload', payload);
 
-  webPush
-    .sendNotification(subscription, payload, {})
-    .then((response) => {
-      console.log("Status : " + util.inspect(response.statusCode));
-      console.log("Headers : " + JSON.stringify(response.headers));
-      console.log("Body : " + JSON.stringify(response.body));
-    })
-    .catch((error) => {
-      console.log("Status : " + util.inspect(error.statusCode));
-      console.log("Headers : " + JSON.stringify(error.headers));
-      console.log("Body : " + JSON.stringify(error.body));
-    });
+  for (let subscription of subscribers) {
+    console.log('subscription', subscription);
+
+    webPush
+      .sendNotification(subscription, payload, {})
+      .then((response) => {
+        console.log("Status : " + util.inspect(response.statusCode));
+        console.log("Headers : " + JSON.stringify(response.headers));
+        console.log("Body : " + JSON.stringify(response.body));
+      })
+      .catch((error) => {
+        console.error(error);
+
+        console.log("Status : " + util.inspect(error.statusCode));
+        console.log("Headers : " + JSON.stringify(error.headers));
+        console.log("Body : " + JSON.stringify(error.body));
+      });
+  }
 
   res.send('Notification sent!');
 });
 
 app.post('/subscribe', function (req, res) {
-  let endpoint = req.body['notificationEndPoint'];
-  let publicKey = req.body['publicKey'];
+  let endpoint = req.body["endpoint"];
+  let p256dh = req.body['p256dh'];
   let auth = req.body['auth'];
 
   let pushSubscription = {
-    endpoint: endpoint,
+    endpoint,
     keys: {
-      p256dh: publicKey,
-      auth: auth
+      p256dh,
+      auth
     }
   };
 
@@ -100,7 +102,7 @@ app.post('/subscribe', function (req, res) {
 });
 
 app.post('/unsubscribe', function (req, res) {
-  let endpoint = req.body['notificationEndPoint'];
+  let endpoint = req.body["endpoint"];
 
   subscribers = subscribers.filter(subscriber => {
     endpoint == subscriber.endpoint
