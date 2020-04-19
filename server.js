@@ -44,6 +44,12 @@ app.get('/status', function (req, res) {
   res.send('Server Running!')
 });
 
+app.get('/clear', function (req, res) {
+  subscribers = [];
+
+  res.send('Cleared!')
+});
+
 app.post('/notify', function (req, res) {
   let message = req.body.message;
   let inquiryId = req.body.inquiryId;
