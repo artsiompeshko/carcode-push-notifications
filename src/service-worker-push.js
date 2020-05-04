@@ -1,4 +1,4 @@
-const PUBLIC_KEY = 'BN26qD8JOTrUpNvh3K2OiEQtE_ZBxaWgduxoOF_6ofVcu1irXsRy6fVQCrOpp8gPAan-M3gY0grIU3v2QM3bVBI';
+const PUBLIC_KEY = 'BHtmWnExKQdRyO8QnteTijOpYFbfCdntNJtsU-hQMsfF_fCx-P5aNLQKeJlD2SfHM90OD5ATdkuYyexMKs-1tXU';
 
 const pushButton = document.getElementById('push-btn');
 
