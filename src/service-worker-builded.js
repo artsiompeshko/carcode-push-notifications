@@ -74,7 +74,7 @@ const {
   precaching
 } = workbox;
 
-precaching.precacheAndRoute([{"revision":"3d0eb82897010abcb4048a0ed955c87d","url":"index.html"},{"revision":"d22d8c9d3f51ada9cea448ee7fa33686","url":"service-worker-custom-install.js"},{"revision":"5fafec20590fd7314cf274614d3a6638","url":"service-worker-push.js"},{"revision":"20b52e679ac429aa46fb2433643d97a4","url":"service-worker-registration.js"}].concat(self.customPaths), {});
+precaching.precacheAndRoute([{"revision":"5e33d77b1f152747dc8f084857968bab","url":"index.html"},{"revision":"d22d8c9d3f51ada9cea448ee7fa33686","url":"service-worker-custom-install.js"},{"revision":"83e9ef87f9402cdd1b26edfd406f3e04","url":"service-worker-push.js"},{"revision":"20b52e679ac429aa46fb2433643d97a4","url":"service-worker-registration.js"}].concat(self.customPaths), {});
 
 routing.registerRoute(
   new RegExp('/'),
